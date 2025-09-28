@@ -1,0 +1,48 @@
+@page "/EventList"
+
+<h2>Event List</h2>
+
+@if (events.Count == 0)
+{
+    <p>No events available.</p>
+}
+else
+{
+    <Virtualize Items="events" Context="evt">
+        <li>
+            <strong>@evt.EventName</strong> - @evt.EventDate.ToShortDateString() - @evt.Location
+            <br />
+            <NavLink href="/Details">Details</NavLink> |
+            <NavLink href="/Registration">Register</NavLink>
+        </li>
+    </Virtualize>
+}
+
+@code {
+    private List<EventModel> events = new()
+    {
+        new EventModel
+        {
+            EventName = "Tech Conference",
+            EventDate = DateTime.Now.AddDays(10),
+            Location = "New York",
+            Description = "A conference about the latest in tech."
+        },
+        new EventModel
+        {
+            EventName = "Music Festival",
+            EventDate = DateTime.Now.AddDays(20),
+            Location = "Los Angeles",
+            Description = "Enjoy live music performances."
+        }
+        // Add more events as needed
+    };
+
+    public class EventModel
+    {
+        public string EventName { get; set; }
+        public DateTime EventDate { get; set; }
+        public string Location { get; set; }
+        public string Description { get; set; }
+    }
+}
