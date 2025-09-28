@@ -1,0 +1,51 @@
+@inject AppState AppState
+
+<h3>User Session Tracker</h3>
+<p>User Name: @AppState.UserName</p>
+<p>Registered: @(AppState.IsRegistered ? "Yes" : "No")</p>
+
+<input @bind="userName" placeholder="Enter your name" />
+<button @onclick="UpdateUser">Set User</button>
+
+<hr />
+
+<h4>Attendance Tracker</h4>
+@foreach (var evt in events)
+{
+    <div>
+        <span>@evt</span>
+        @if (AppState.HasAttended(evt))
+        {
+            <span class="text-success"> - Attended</span>
+        }
+        else
+        {
+            <button @onclick="() => MarkAttendance(evt)">Mark Attendance</button>
+        }
+    </div>
+}
+
+@code {
+    private string userName;
+    private List<string> events = new() { "Tech Conference", "Music Festival" };
+
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
+    }
+
+    private void UpdateUser()
+    {
+        AppState.SetUser(userName);
+    }
+
+    private void MarkAttendance(string eventName)
+    {
+        AppState.MarkAttendance(eventName);
+    }
+
+    public void Dispose()
+    {
+        AppState.OnChange -= StateHasChanged;
+    }
+}
