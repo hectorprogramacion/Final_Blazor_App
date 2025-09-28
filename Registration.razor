@@ -1,0 +1,56 @@
+@page "/Registration"
+@using System.ComponentModel.DataAnnotations
+
+<h2>Event Registration</h2>
+
+<EditForm Model="@registrationModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name:</label>
+        <input @bind="registrationModel.Name" />
+        <ValidationMessage For="@(() => registrationModel.Name)" />
+    </div>
+    <div>
+        <label>Email:</label>
+        <input @bind="registrationModel.Email" type="email" />
+        <ValidationMessage For="@(() => registrationModel.Email)" />
+    </div>
+    <div>
+        <label>Phone:</label>
+        <input @bind="registrationModel.Phone" type="tel" />
+        <ValidationMessage For="@(() => registrationModel.Phone)" />
+    </div>
+    <button type="submit">Register</button>
+</EditForm>
+
+@if (isRegistered)
+{
+    <p class="text-success">Registration successful!</p>
+}
+
+@code {
+    private RegistrationModel registrationModel = new();
+    private bool isRegistered = false;
+
+    private void HandleValidSubmit()
+    {
+        isRegistered = true;
+        // You can add logic to save registration data here
+    }
+
+    public class RegistrationModel
+    {
+        [Required(ErrorMessage = "Name is required")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Phone is required")]
+        [Phone(ErrorMessage = "Invalid phone number")]
+        public string Phone { get; set; }
+    }
+}
